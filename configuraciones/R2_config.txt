@@ -1,0 +1,192 @@
+R2#show running-config
+Building configuration...
+
+Current configuration : 2589 bytes
+!
+! Last configuration change at 18:43:40 UTC Mon May 18 2026
+upgrade fpd auto
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+no ip icmp rate-limit unreachable
+!
+!
+!
+!
+!         
+!         
+no ip domain lookup
+ip cef    
+no ipv6 cef
+!         
+multilink bundle-name authenticated
+!         
+!         
+!         
+!         
+!         
+!         
+!         
+!         
+!         
+!         
+redundancy
+!         
+!         
+ip tcp synwait-time 5
+!         
+class-map match-any CLASE-VIDEO
+ match ip dscp af41 
+ match access-group 20
+class-map match-all CLASE-MGMT
+ match ip dscp cs6 
+class-map match-any CLASE-VOIP
+ match ip dscp ef 
+ match access-group 10
+!         
+policy-map QOS-SDWAN
+ class CLASE-VOIP
+  priority percent 30
+ class CLASE-VIDEO
+  bandwidth percent 40 
+ class CLASE-MGMT
+  bandwidth percent 10 
+ class class-default
+  bandwidth percent 20 
+!         
+!         
+!         
+!         
+!         
+!         
+!         
+!         
+!         
+!         
+!         
+interface FastEthernet0/0
+ ip address 172.16.0.2 255.255.255.252
+ duplex half
+ service-policy output QOS-SDWAN
+!         
+interface FastEthernet1/0
+ no ip address
+ duplex half
+!         
+interface FastEthernet1/0.10
+ encapsulation dot1Q 10
+ ip address 10.20.10.1 255.255.255.240
+!         
+interface FastEthernet1/0.20
+ encapsulation dot1Q 20
+ ip address 10.20.20.1 255.255.255.240
+!         
+interface FastEthernet1/0.30
+ encapsulation dot1Q 30
+ ip address 10.20.30.1 255.255.255.224
+!         
+interface FastEthernet2/0
+ no ip address
+ shutdown 
+ duplex auto
+ speed auto
+!         
+interface FastEthernet2/1
+ no ip address
+ shutdown 
+ duplex auto
+ speed auto
+!         
+interface Ethernet3/0
+ no ip address
+ shutdown 
+ duplex half
+!         
+interface Ethernet3/1
+ no ip address
+ shutdown 
+ duplex half
+!         
+interface Ethernet3/2
+ no ip address
+ shutdown 
+ duplex half
+!         
+interface Ethernet3/3
+ no ip address
+ shutdown 
+ duplex half
+!         
+interface Ethernet3/4
+ no ip address
+ shutdown 
+ duplex half
+!         
+interface Ethernet3/5
+ no ip address
+ shutdown 
+ duplex half
+!         
+interface Ethernet3/6
+ no ip address
+ shutdown 
+ duplex half
+!         
+interface Ethernet3/7
+ no ip address
+ shutdown 
+ duplex half
+!         
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!         
+!         
+ip route 10.10.10.0 255.255.255.240 172.16.0.1
+ip route 10.10.20.0 255.255.255.240 172.16.0.1
+ip route 10.10.30.0 255.255.255.224 172.16.0.1
+!         
+access-list 10 permit 10.20.10.0 0.0.0.15
+access-list 20 permit 10.20.20.0 0.0.0.15
+no cdp log mismatch duplex
+!         
+!         
+!         
+control-plane
+!         
+!         
+!         
+mgcp profile default
+!         
+!         
+!         
+gatekeeper
+ shutdown 
+!         
+!         
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ login    
+ transport input all
+!         
+!         
+end  
